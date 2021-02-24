@@ -66,6 +66,7 @@ const config: Configuration = {
     path: resolve(__dirname, 'build'),
   },
   mode: process.env.NODE_ENV === 'dev' ? 'development' : 'production',
+  devtool: "source-map",
   module: {
     rules: [{ test: /\.ts$/, loader: 'ts-loader' }],
   },

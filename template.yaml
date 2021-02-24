@@ -3,31 +3,37 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   discord-game-server-manager
 
-  Sample SAM Template for sam-typescript-webpack
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Runtime: nodejs14.x
     Timeout: 30
-
+    
 Resources:
-  HelloFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  DiscordPing:
+    Type: AWS::Serverless::Function 
     Properties:
-      CodeUri: build/hello
-      Handler: hello.handler
+      CodeUri: build/handlers
+      Handler: discordPing.handler
       Events:
-        Hello:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+        DiscordPing:
+          Type: Api
           Properties:
-            Path: /hello
-            Method: get
+            Path: /
+            Method: post
+      Policies:
+      - Statement:
+        - Sid: SecretsManagerGetValuePolicy
+          Effect: Allow
+          Action:
+          - secretsmanager:GetSecretValue
+          - secretsmanager:GetResourcePolicy
+          - secretsmanager:DescribeSecret
+          - secretsmanager:ListSecretVersionIds
+          Resource:
+          - arn:aws:secretsmanager:us-west-2:758792894779:secret:/discord*
+
 
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloApi:
-    Description: 'API Gateway endpoint URL for Prod stage for Hello function'
-    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/'
+  DiscordPingEndpoint:
+    Description: 'Endpoint for discord to ping with simple requests'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/'

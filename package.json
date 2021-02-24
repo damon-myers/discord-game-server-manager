@@ -38,5 +38,9 @@
     "webpack-cli": "^4.5.0",
     "yaml-cfn": "^0.3.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "aws-sdk": "^2.850.0",
+    "source-map-support": "^0.5.19",
+    "tweetnacl": "^1.0.3"
+  }
 }
