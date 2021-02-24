@@ -1,0 +1,42 @@
+{
+  "name": "discord-game-server-manager",
+  "version": "0.0.1",
+  "description": "API for handling Discord slash commands to manage a private game server",
+  "scripts": {
+    "build": "npm run clean && webpack",
+    "clean": "rimraf build",
+    "lint": "eslint --ext .ts .",
+    "test": "jest",
+    "watch": "npm run build -- --watch"
+  },
+  "keywords": [
+    "SAM",
+    "TypeScript",
+    "Webpack",
+    "Lambda",
+    "Serverless"
+  ],
+  "author": "Damon Myers",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.72",
+    "@types/jest": "^26.0.20",
+    "@types/webpack": "^4.41.26",
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.5.2",
+    "ts-loader": "^8.0.17",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.2",
+    "webpack": "^5.24.1",
+    "webpack-cli": "^4.5.0",
+    "yaml-cfn": "^0.3.0"
+  },
+  "dependencies": {}
+}
