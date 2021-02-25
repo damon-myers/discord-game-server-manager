@@ -8,6 +8,8 @@ export function wrap(impl: LambdaImplementation): LambdaImplementation {
   return async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const secrets = await getSecretValue('/discord/prod');
 
+    console.log(`Headers: ${JSON.stringify(event.headers)}`);
+
     if (!isValidRequestSignature(event, secrets.applicationPublicKey)) {
       return {
         statusCode: 401,

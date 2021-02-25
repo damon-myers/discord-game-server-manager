@@ -8,7 +8,7 @@ export function isValidRequestSignature(request: APIGatewayProxyEvent, appPublic
 
   console.log(`Got:\nsignature:${signature},\ntimestamp: ${timestamp},\nbody: ${body}`)
 
-  return !signature || !timestamp || nacl.sign.detached.verify(
+  return signature && timestamp && nacl.sign.detached.verify(
     Buffer.from(timestamp + body),
     Buffer.from(signature, 'hex'),
     Buffer.from(appPublicKey, 'hex')
