@@ -9,13 +9,13 @@ Globals:
     Timeout: 30
     
 Resources:
-  DiscordPing:
+  DiscordServerCommands:
     Type: AWS::Serverless::Function 
     Properties:
       CodeUri: build/handlers
-      Handler: discordPing.handler
+      Handler: discordServerCommands.handler
       Events:
-        DiscordPing:
+        DiscordCommand:
           Type: Api
           Properties:
             Path: /
@@ -31,9 +31,14 @@ Resources:
           - secretsmanager:ListSecretVersionIds
           Resource:
           - arn:aws:secretsmanager:us-west-2:758792894779:secret:/discord*
-
-
+        - Sid: DescribeEC2Instance
+          Effect: Allow
+          Action:
+          - ec2:DescribeInstances
+          Resource:
+          - "*"
+        
 Outputs:
-  DiscordPingEndpoint:
-    Description: 'Endpoint for discord to ping with simple requests'
+  DiscordCommandsEndpoint:
+    Description: 'Endpoint for discord to hit with commands'
     Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/'
