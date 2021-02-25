@@ -1,3 +1,3 @@
 export * from './aws';
 export * from './discord';
-export * from './lambda-wrapper';
+export * from './lambdaWrapper';

@@ -3,6 +3,12 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   discord-game-server-manager
 
+Parameters:
+  GameServerInstance:
+    Type: String
+    Default: "none"
+    Description: The instance ID of the server to be managed
+
 Globals:
   Function:
     Runtime: nodejs14.x
@@ -37,6 +43,13 @@ Resources:
           - ec2:DescribeInstances
           Resource:
           - "*"
+        - Sid: StartStopInstance
+          Effect: Allow
+          Action:
+          - ec2:StartInstances
+          - ec2:StopInstances
+          Resource:
+          - arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/${GameServerInstance}
         
 Outputs:
   DiscordCommandsEndpoint:

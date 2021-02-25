@@ -1,5 +1,5 @@
 import { EC2, SecretsManager } from 'aws-sdk';
-import { DescribeInstancesRequest, Instance } from 'aws-sdk/clients/ec2';
+import { DescribeInstancesRequest, Instance, InstanceStateChange, StartInstancesRequest, StopInstancesRequest } from 'aws-sdk/clients/ec2';
 import { GetSecretValueRequest } from 'aws-sdk/clients/secretsmanager';
 
 export async function getSecretValue(secretId: string): Promise<any> {
@@ -28,6 +28,38 @@ export async function describeInstance(instanceId: string): Promise<Instance> {
   try {
     const response = await ec2.describeInstances(params).promise();
     return response.Reservations[0].Instances[0];
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export async function startInstance(instanceId: string): Promise<InstanceStateChange> {
+  const params: StartInstancesRequest = {
+    InstanceIds: [instanceId]
+  };
+
+  const ec2 = new EC2();
+
+  try {
+    const response = await ec2.startInstances(params).promise();
+    return response.StartingInstances[0];
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export async function stopInstance(instanceId: string): Promise<InstanceStateChange> {
+  const params: StopInstancesRequest = {
+    InstanceIds: [instanceId]
+  };
+
+  const ec2 = new EC2();
+
+  try {
+    const response = await ec2.stopInstances(params).promise();
+    return response.StoppingInstances[0];
   } catch (err) {
     console.error(err);
     return null;

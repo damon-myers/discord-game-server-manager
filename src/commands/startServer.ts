@@ -1,13 +1,13 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { describeInstance, getSecretValue } from '../util';
-import { Instance } from 'aws-sdk/clients/ec2';
+import { startInstance, getSecretValue } from '../util';
+import { InstanceStateChange } from 'aws-sdk/clients/ec2';
 import { InteractionResponse, InteractionResponseType } from 'slash-commands';
 
 /**
  * Discord will occasionally ping the API with a request and some signature headers
  * This Lambda responds to those requests appropriately, by verifying the request signature
  */
-export async function serverStatusHandler(_: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+export async function startServerHandler(_: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   const secrets = await getSecretValue('/discord/prod');
 
   const ec2InstanceId = secrets.gameServerId;
@@ -19,32 +19,25 @@ export async function serverStatusHandler(_: APIGatewayProxyEvent): Promise<APIG
     };
   }
 
-  const serverData: Instance = await describeInstance(ec2InstanceId);
+  const serverData: InstanceStateChange = await startInstance(ec2InstanceId);
 
-  return responseFromServerData(serverData);
+  return buildResponse(serverData);
 }
 
-function responseFromServerData(serverData: Instance): APIGatewayProxyResult {
+function buildResponse(serverData: InstanceStateChange): APIGatewayProxyResult {
   if (!serverData) {
     return {
       statusCode: 200,
       body: JSON.stringify({
         type: InteractionResponseType.CHANNEL_MESSAGE,
         data: {
-          content: ":exclamation: Error - Server could not be found"
+          content: ":exclamation: Error - Server was not started (sowwy uwu)"
         }
       })
     };
   }
 
-  const serverStatusMessage = `
-
-**Server Status:**
-  IP Address: ${serverData.PublicIpAddress}
-  Status: ${serverData.State.Name}
-  Reason: ${serverData.StateReason}
-  Started At: ${serverData.LaunchTime}
-  `;
+  const serverStatusMessage = 'Server is being started. Check back in a bit with `/server status.`';
 
   const bodyData: InteractionResponse = {
     type: InteractionResponseType.CHANNEL_MESSAGE,
@@ -56,5 +49,5 @@ function responseFromServerData(serverData: Instance): APIGatewayProxyResult {
   return {
     statusCode: 200,
     body: JSON.stringify(bodyData)
-  };
+  }
 }

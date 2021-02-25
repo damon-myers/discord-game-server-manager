@@ -6,8 +6,6 @@ const interaction = new DiscordInteractions({
   publicKey: process.env.DISCORD_APP_PUBLIC_KEY,
 });
 
-console.log(process.env);
-
 const commandDefinition: PartialApplicationCommand = {
   "name": "server",
   "description": "Start, stop, or check on the server",
@@ -16,6 +14,16 @@ const commandDefinition: PartialApplicationCommand = {
       "name": "status",
       "description": "Get information about the server, including its current IP address",
       "default": true,
+      "type": 1
+    },
+    {
+      "name": "start",
+      "description": "Start the server",
+      "type": 1
+    },
+    {
+      "name": "stop",
+      "description": "Stop the server (to save :moneybag:)",
       "type": 1
     }
   ]
