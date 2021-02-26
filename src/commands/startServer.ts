@@ -31,7 +31,7 @@ function buildResponse(serverData: InstanceStateChange): APIGatewayProxyResult {
       body: JSON.stringify({
         type: InteractionResponseType.CHANNEL_MESSAGE,
         data: {
-          content: ":exclamation: Error - Server was not started (sowwy uwu)"
+          content: "‼️ Error - Server was not started (sowwy uwu)"
         }
       })
     };

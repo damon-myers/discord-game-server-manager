@@ -31,7 +31,7 @@ function responseFromServerData(serverData: Instance): APIGatewayProxyResult {
       body: JSON.stringify({
         type: InteractionResponseType.CHANNEL_MESSAGE,
         data: {
-          content: ":exclamation: Error - Server could not be found"
+          content: "‼️ Error - Server could not be found"
         }
       })
     };
@@ -42,7 +42,7 @@ function responseFromServerData(serverData: Instance): APIGatewayProxyResult {
 **Server Status:**
   IP Address: ${serverData.PublicIpAddress}
   Status: ${serverData.State.Name}
-  Reason: ${serverData.StateReason}
+  Reason: ${serverData.StateReason && serverData.StateReason.Message}
   Started At: ${serverData.LaunchTime}
   `;
 

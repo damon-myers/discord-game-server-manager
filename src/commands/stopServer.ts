@@ -33,13 +33,13 @@ function buildResponse(serverData: InstanceStateChange): APIGatewayProxyResult {
         data: {
           content: `
           :exclamation: Error - Server was not stopped successfully
-          (please let Damon know so he saves :moneybag:)`
+          (please let Damon know so he saves 💰)`
         }
       })
     };
   }
 
-  const serverStatusMessage = 'Server is being started. Check back in a bit with `/server status.`';
+  const serverStatusMessage = 'Server is being stopped. Check back in a bit with `/server status.`';
 
   const bodyData: InteractionResponse = {
     type: InteractionResponseType.CHANNEL_MESSAGE,

@@ -19,6 +19,4 @@ Based on the AWS SAM + TypeScript tutorial on [dev.to](https://dev.to/elthrasher
 ## TODO
 
 - [ ] Run docker container on EC2 startup
-- [ ] Enable starting the server via slash command
-- [ ] Enable stopping the server via slash command
 - [ ] auth the endpoint with the bot token

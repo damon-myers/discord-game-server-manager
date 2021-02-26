@@ -23,7 +23,7 @@ const commandDefinition: PartialApplicationCommand = {
     },
     {
       "name": "stop",
-      "description": "Stop the server (to save :moneybag:)",
+      "description": "Stop the server (to save 💰)",
       "type": 1
     }
   ]
