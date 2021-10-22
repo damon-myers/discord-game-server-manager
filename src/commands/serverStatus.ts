@@ -29,7 +29,7 @@ function responseFromServerData(serverData: Instance): APIGatewayProxyResult {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        type: InteractionResponseType.CHANNEL_MESSAGE,
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
           content: "‼️ Error - Server could not be found"
         }
@@ -47,7 +47,7 @@ function responseFromServerData(serverData: Instance): APIGatewayProxyResult {
   `;
 
   const bodyData: InteractionResponse = {
-    type: InteractionResponseType.CHANNEL_MESSAGE,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content: serverStatusMessage
     }

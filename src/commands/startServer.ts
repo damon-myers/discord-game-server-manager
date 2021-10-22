@@ -29,7 +29,7 @@ function buildResponse(serverData: InstanceStateChange): APIGatewayProxyResult {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        type: InteractionResponseType.CHANNEL_MESSAGE,
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: {
           content: "‼️ Error - Server was not started (sowwy uwu)"
         }
@@ -40,7 +40,7 @@ function buildResponse(serverData: InstanceStateChange): APIGatewayProxyResult {
   const serverStatusMessage = 'Server is being started. Check back in a bit with `/server status.`';
 
   const bodyData: InteractionResponse = {
-    type: InteractionResponseType.CHANNEL_MESSAGE,
+    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
     data: {
       content: serverStatusMessage
     }
