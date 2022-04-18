@@ -2,19 +2,17 @@
   "name": "discord-game-server-manager",
   "version": "0.0.1",
   "description": "API for handling Discord slash commands to manage a private game server",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "npm run clean && webpack",
-    "clean": "rimraf build",
+    "build": "npm run clean && tsc",
+    "clean": "rimraf dist",
     "lint": "eslint --ext .ts .",
     "test": "jest",
     "watch": "npm run build -- --watch"
   },
   "keywords": [
-    "SAM",
     "TypeScript",
-    "Webpack",
-    "Lambda",
-    "Serverless"
+    "Express"
   ],
   "author": "Damon Myers",
   "license": "ISC",
@@ -35,12 +33,15 @@
     "ts-loader": "^8.0.17",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.2",
-    "webpack": "^5.24.1",
     "webpack-cli": "^4.5.0",
     "yaml-cfn": "^0.3.0"
   },
   "dependencies": {
+    "@types/express": "^4.17.13",
     "aws-sdk": "^2.850.0",
+    "concurrently": "^7.1.0",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15",
     "source-map-support": "^0.5.19",
     "tweetnacl": "^1.0.3"
   }
