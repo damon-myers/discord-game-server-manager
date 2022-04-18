@@ -1,6 +1,6 @@
-import { APIGatewayProxyEvent } from "aws-lambda";
 import * as nacl from 'tweetnacl';
 import { getSecretValue } from "./aws";
+import { Request } from 'express';
 
 export interface DiscordSecret {
   applicationPublicKey: string;
@@ -20,9 +20,9 @@ export async function getDiscordSecret(env: string): Promise<DiscordSecret> {
   return getSecretValue(`/discord/${env}`);
 }
 
-export function isValidRequestSignature(request: APIGatewayProxyEvent, appPublicKey: string): boolean {
-  const signature = request.headers['x-signature-ed25519'];
-  const timestamp = request.headers['x-signature-timestamp'];
+export function isValidRequestSignature(request: Request, appPublicKey: string): boolean {
+  const signature = request.get('x-signature-ed25519');
+  const timestamp = request.get('x-signature-timestamp');
   const body = request.body;
 
   console.log(`Got:\nsignature:${signature},\ntimestamp: ${timestamp},\nbody: ${body}`)

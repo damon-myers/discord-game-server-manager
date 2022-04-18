@@ -1,16 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
+import { isValidRequestSignature } from '../util';
 
 export async function validateSignature(req: Request, res: Response, next: NextFunction) {
-  // TODO: Rewrite the below algorithm once secrets are not fetched during request handling
-  // return async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  //   const secrets = await getSecretValue('/discord/prod');
-  //   console.log(`Headers: ${JSON.stringify(event.headers)}`);
-  //   if (!isValidRequestSignature(event, secrets.applicationPublicKey)) {
-  //     return {
-  //statusCode: 401,
-  //       body: 'invalid request signature'
-  //     };
-  //   }
-  //   return impl(event);
-  // }
+  if (!isValidRequestSignature(req, process.env.DISCORD_APP_PUBLIC_KEY)) {
+    res.status(401).send('invalid request signature');
+  }
+
+  next();
 }
