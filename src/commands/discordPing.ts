@@ -10,5 +10,5 @@ export async function discordPingHandler(req: Request, res: Response): Promise<v
     res.json({ type: 1 })
   }
 
-  res.status(400).send("bad request");
+  res.sendStatus(400);
 }
