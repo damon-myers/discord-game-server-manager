@@ -1,5 +1,24 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 import * as nacl from 'tweetnacl';
+import { getSecretValue } from "./aws";
+
+export interface DiscordSecret {
+  applicationPublicKey: string;
+  botToken: string;
+  gameServerId: string;
+}
+
+export async function getDiscordSecret(env: string): Promise<DiscordSecret> {
+  if (env === 'dev') {
+    return {
+      applicationPublicKey: 'MOCK',
+      botToken: 'MOCK',
+      gameServerId: 'MOCK'
+    };
+  }
+
+  return getSecretValue(`/discord/${env}`);
+}
 
 export function isValidRequestSignature(request: APIGatewayProxyEvent, appPublicKey: string): boolean {
   const signature = request.headers['x-signature-ed25519'];

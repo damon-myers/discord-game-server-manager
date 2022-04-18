@@ -1,17 +1,10 @@
-import { startInstance, getSecretValue } from '../util';
+import { startInstance } from '../util';
 import { InstanceStateChange } from 'aws-sdk/clients/ec2';
 import { InteractionResponse, InteractionResponseType } from 'slash-commands';
 import { Response } from 'express'
 
 export async function startServerHandler(res: Response): Promise<void> {
-  const secrets = await getSecretValue('/discord/prod');
-
-  const ec2InstanceId = secrets.gameServerId;
-
-  if (!ec2InstanceId) {
-    res.status(500).send('failed to get server instance id');
-    return;
-  }
+  const ec2InstanceId = process.env.GAME_SERVER_INSTANCE_ID;
 
   const serverData: InstanceStateChange = await startInstance(ec2InstanceId);
 
