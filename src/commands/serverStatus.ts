@@ -9,6 +9,20 @@ export async function serverStatusHandler(res: Response): Promise<void> {
   res.json(responseFromServerData(serverData));
 }
 
+function getStatusEmoji(stateName: string): string {
+  switch (stateName) {
+    case 'running':
+      return ':green_circle:';
+    case 'stopping':
+    case 'initializing':
+      return ':yellow_circle:'
+    case 'stopped':
+      return ':black_circle:'
+    default:
+      return ':question:'
+  }
+}
+
 function responseFromServerData(serverData: Instance) {
   if (!serverData) {
     return {
@@ -22,7 +36,7 @@ function responseFromServerData(serverData: Instance) {
   const serverStatusMessage = `\n
 **Server Status:**
   IP Address: ${serverData.PublicIpAddress}
-  Status: ${serverData.State.Name}
+  Status: ${getStatusEmoji(serverData.State.Name)} ${serverData.State.Name}
   Reason: ${serverData.StateReason && serverData.StateReason.Message}
   Started At: ${serverData.LaunchTime}
   `;
