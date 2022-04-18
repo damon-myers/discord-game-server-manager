@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { handleDiscordRequest } from './routes/discordServerCommands'
-import { validateSignature } from './middleware/';
+import { checkToken, validateSignature } from './middleware/';
 import { getDiscordSecret } from './util';
 
 // Fetches secrets from SecretsManager and then exposes them as env vars
@@ -29,6 +29,9 @@ async function initExpress() {
   // Discord sometimes will hit the API with invalid signatures,
   // to confirm we're verifying them correctly
   app.use(validateSignature)
+
+  // checks for bot token
+  app.use(checkToken)
 
   app.post('/', handleDiscordRequest);
 
