@@ -1,20 +1,14 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { Request, Response } from 'express';
 
 /**
  * Discord will occasionally ping the API with a request and some signature headers
  * This Lambda responds to those requests appropriately, by verifying the request signature
  */
-export async function discordPingHandler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-  const payload = JSON.parse(event.body);
+export async function discordPingHandler(req: Request, res: Response): Promise<void> {
+  const payload = req.body;
   if (payload.type == 1) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ type: 1 })
-    };
+    res.json({ type: 1 })
   }
 
-  return {
-    statusCode: 400,
-    body: "bad request"
-  };
+  res.status(400).send("bad request");
 }

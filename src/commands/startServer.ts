@@ -1,39 +1,30 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { startInstance, getSecretValue } from '../util';
 import { InstanceStateChange } from 'aws-sdk/clients/ec2';
 import { InteractionResponse, InteractionResponseType } from 'slash-commands';
+import { Response } from 'express'
 
-/**
- * Discord will occasionally ping the API with a request and some signature headers
- * This Lambda responds to those requests appropriately, by verifying the request signature
- */
-export async function startServerHandler(_: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
+export async function startServerHandler(res: Response): Promise<void> {
   const secrets = await getSecretValue('/discord/prod');
 
   const ec2InstanceId = secrets.gameServerId;
 
   if (!ec2InstanceId) {
-    return {
-      statusCode: 500,
-      body: 'failed to get server instance id'
-    };
+    res.status(500).send('failed to get server instance id');
+    return;
   }
 
   const serverData: InstanceStateChange = await startInstance(ec2InstanceId);
 
-  return buildResponse(serverData);
+  res.json(buildResponse(serverData));
 }
 
-function buildResponse(serverData: InstanceStateChange): APIGatewayProxyResult {
+function buildResponse(serverData: InstanceStateChange) {
   if (!serverData) {
     return {
-      statusCode: 200,
-      body: JSON.stringify({
-        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-        data: {
-          content: "‼️ Error - Server was not started (sowwy uwu)"
-        }
-      })
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      data: {
+        content: "‼️ Error - Server was not started (sowwy uwu)"
+      }
     };
   }
 
@@ -46,8 +37,5 @@ function buildResponse(serverData: InstanceStateChange): APIGatewayProxyResult {
     }
   };
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(bodyData)
-  }
+  return bodyData;
 }
