@@ -48,8 +48,5 @@ function responseFromServerData(serverData: Instance) {
     }
   };
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(bodyData)
-  };
+  return bodyData;
 }
