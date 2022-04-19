@@ -14,7 +14,7 @@ enum SupportedCommands {
 const acknowledgeCommand = {
   type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE as number,
   data: {
-    content: 'Command received. Processing your request...'
+    content: '⌛ Processing command...'
   }
 }
 
@@ -50,7 +50,7 @@ export async function handleDiscordRequest(request: Request, response: Response)
     return;
   }
 
-  response.json(JSON.stringify(acknowledgeCommand));
+  response.json(acknowledgeCommand);
 
   await processCommand(payload);
 };
