@@ -1,9 +1,14 @@
 {
+  "exclude": [
+    "scripts"
+  ],
   "compilerOptions": {
+    "rootDir": "src",
     "alwaysStrict": true,
     "module": "commonjs",
     "noImplicitAny": true,
     "target": "es2019",
-    "sourceMap": true
+    "sourceMap": true,
+    "outDir": "dist",
   }
 }

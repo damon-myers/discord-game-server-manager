@@ -1,27 +1,43 @@
-import { APIGatewayProxyEvent } from "aws-lambda";
-import * as nacl from 'tweetnacl';
+import axios from "axios";
+import { getSecretValue } from "./aws";
 
-export function isValidRequestSignature(request: APIGatewayProxyEvent, appPublicKey: string): boolean {
-  const signature = request.headers['x-signature-ed25519'];
-  const timestamp = request.headers['x-signature-timestamp'];
-  const body = request.body;
+export const DISCORD_BASE_URL = "https://discord.com/api/v9"
 
-  console.log(`Got:\nsignature:${signature},\ntimestamp: ${timestamp},\nbody: ${body}`)
+export interface DiscordSecret {
+  applicationPublicKey: string;
+  botToken: string;
+  gameServerId: string;
+}
 
-  if (!signature || !timestamp) {
-    return false;
+export async function getDiscordSecret(env: string): Promise<DiscordSecret> {
+  if (env === 'dev') {
+    return {
+      applicationPublicKey: 'MOCK',
+      botToken: 'MOCK',
+      gameServerId: 'MOCK'
+    };
   }
 
-  let isValid = false;
+  return getSecretValue(`/discord/${env}`);
+}
+
+export async function editInteractionResponse(payload: any, newMessage: string): Promise<void> {
+  const endpoint = `${DISCORD_BASE_URL}/webhooks/${payload.application_id}/${payload.token}/messages/@original`;
+
   try {
-    isValid = nacl.sign.detached.verify(
-      Buffer.from(timestamp + body),
-      Buffer.from(signature, 'hex'),
-      Buffer.from(appPublicKey, 'hex')
+    const response = await axios.patch(
+      endpoint,
+      {
+        content: newMessage
+      }
     );
-  } catch (_) {
-    return false;
-  }
 
-  return isValid;
+    console.log(`Updated initial response. Response from Discord: ${JSON.stringify(response.data)}`);
+  } catch (err) {
+    console.error('[ERROR] Failed to update initial response', {
+      endpoint,
+      content: newMessage,
+    });
+    console.error(err);
+  }
 }
