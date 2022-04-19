@@ -23,7 +23,9 @@ export async function getDiscordSecret(env: string): Promise<DiscordSecret> {
 export function isValidRequestSignature(request: Request, appPublicKey: string): boolean {
   const signature = request.get('x-signature-ed25519');
   const timestamp = request.get('x-signature-timestamp');
-  const body = JSON.stringify(request.body);
+
+  const isValidBody = request.body && Object.keys(request.body).length != 0;
+  const body = isValidBody ? JSON.stringify(request.body) : '';
 
   console.log(`Got:\nsignature:${signature},\ntimestamp: ${timestamp},\nbody: ${body}`)
 

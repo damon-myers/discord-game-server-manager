@@ -1,6 +1,7 @@
 import * as express from 'express';
+import { verifyKeyMiddleware } from 'discord-interactions';
 import { handleDiscordRequest } from './routes/discordServerCommands'
-import { checkToken, validateSignature } from './middleware/';
+import { checkTokenMiddleware } from './middleware';
 import { getDiscordSecret } from './util';
 
 // Fetches secrets from SecretsManager and then exposes them as env vars
@@ -21,17 +22,14 @@ async function storeSecretsInEnv() {
 }
 
 async function initExpress() {
-  const app = express()
-  const port = parseInt(process.env.SERVER_PORT)
+  const app = express();
+  const port = parseInt(process.env.SERVER_PORT);
 
-  app.use(express.json())
-
-  // Discord sometimes will hit the API with invalid signatures,
-  // to confirm we're verifying them correctly
-  app.use(validateSignature)
-
-  // checks for bot token
-  app.use(checkToken)
+  app.use(
+    verifyKeyMiddleware(process.env.DISCORD_APP_PUBLIC_KEY),
+    express.json(),
+    checkTokenMiddleware
+  );
 
   app.post('/', handleDiscordRequest);
 
