@@ -1,12 +1,11 @@
 import { describeInstance } from '../util';
 import { Instance } from 'aws-sdk/clients/ec2';
-import { InteractionResponse, InteractionResponseType } from 'slash-commands';
-import { Response } from 'express';
+import { Interaction } from 'slash-commands';
 
-export async function serverStatusHandler(res: Response): Promise<void> {
+export async function serverStatusHandler(_: Interaction): Promise<string> {
   const serverData: Instance = await describeInstance(process.env.GAME_INSTANCE_SERVER_ID);
 
-  res.json(responseFromServerData(serverData));
+  return responseFromServerData(serverData);
 }
 
 function getStatusEmoji(stateName: string): string {
@@ -23,14 +22,9 @@ function getStatusEmoji(stateName: string): string {
   }
 }
 
-function responseFromServerData(serverData: Instance) {
+function responseFromServerData(serverData: Instance): string {
   if (!serverData) {
-    return {
-      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-      data: {
-        content: "‼️ Error - Server could not be found"
-      }
-    };
+    return "‼️ Error - Server could not be found"
   }
 
   const serverStatusMessage = `\n
@@ -41,12 +35,5 @@ function responseFromServerData(serverData: Instance) {
   Started At: ${serverData.LaunchTime}
   `;
 
-  const bodyData: InteractionResponse = {
-    type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-    data: {
-      content: serverStatusMessage
-    }
-  };
-
-  return bodyData;
+  return serverStatusMessage;
 }
