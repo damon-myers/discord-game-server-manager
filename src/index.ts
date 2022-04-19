@@ -30,7 +30,7 @@ function initExpress() {
     requestLogger
   );
 
-  app.post('/', async (req, res, next) => {
+  app.post('/discord-bot', async (req, res, next) => {
     try {
       await handleDiscordRequest(req, res);
     } catch (err) {
