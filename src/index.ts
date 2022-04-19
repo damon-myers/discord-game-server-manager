@@ -2,6 +2,7 @@ import * as express from 'express';
 import { verifyKeyMiddleware } from 'discord-interactions';
 import { handleDiscordRequest } from './routes/discordServerCommands'
 import { getDiscordSecret } from './util';
+import { requestLogger } from './middleware';
 
 // Fetches secrets from SecretsManager and then exposes them as env vars
 async function storeSecretsInEnv() {
@@ -20,15 +21,22 @@ async function storeSecretsInEnv() {
   }
 }
 
-async function initExpress() {
+function initExpress() {
   const app = express();
   const port = parseInt(process.env.SERVER_PORT);
 
   app.use(
     verifyKeyMiddleware(process.env.DISCORD_APP_PUBLIC_KEY),
+    requestLogger
   );
 
-  app.post('/', handleDiscordRequest);
+  app.post('/', async (req, res, next) => {
+    try {
+      await handleDiscordRequest(req, res);
+    } catch (err) {
+      next(err); // use express error handler
+    }
+  });
 
   app.listen(port, () => {
     console.log(`API available on port ${port}`);

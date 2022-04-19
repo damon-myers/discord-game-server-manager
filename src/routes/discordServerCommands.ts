@@ -1,5 +1,4 @@
 import 'source-map-support/register';
-import { Interaction } from 'slash-commands';
 import { serverStatusHandler, startServerHandler, stopServerHandler } from '../commands';
 import { Request, Response } from 'express';
 
@@ -22,13 +21,13 @@ export async function handleDiscordRequest(request: Request, response: Response)
 
   switch (subcommandName) {
     case SupportedCommands.Status:
-      serverStatusHandler(response);
+      await serverStatusHandler(response);
       break;
     case SupportedCommands.Start:
-      startServerHandler(response)
+      await startServerHandler(response)
       break;
     case SupportedCommands.Stop:
-      stopServerHandler(response);
+      await stopServerHandler(response);
       break;
     default:
       response.status(400).send("bad request - unsupported command");
