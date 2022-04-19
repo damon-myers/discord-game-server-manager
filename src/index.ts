@@ -1,7 +1,6 @@
 import * as express from 'express';
 import { verifyKeyMiddleware } from 'discord-interactions';
 import { handleDiscordRequest } from './routes/discordServerCommands'
-import { checkTokenMiddleware } from './middleware';
 import { getDiscordSecret } from './util';
 
 // Fetches secrets from SecretsManager and then exposes them as env vars
@@ -27,7 +26,6 @@ async function initExpress() {
 
   app.use(
     verifyKeyMiddleware(process.env.DISCORD_APP_PUBLIC_KEY),
-    checkTokenMiddleware
   );
 
   app.post('/', handleDiscordRequest);

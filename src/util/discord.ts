@@ -1,6 +1,4 @@
-import * as nacl from 'tweetnacl';
 import { getSecretValue } from "./aws";
-import { Request } from 'express';
 
 export interface DiscordSecret {
   applicationPublicKey: string;
@@ -18,31 +16,4 @@ export async function getDiscordSecret(env: string): Promise<DiscordSecret> {
   }
 
   return getSecretValue(`/discord/${env}`);
-}
-
-export function isValidRequestSignature(request: Request, appPublicKey: string): boolean {
-  const signature = request.get('x-signature-ed25519');
-  const timestamp = request.get('x-signature-timestamp');
-
-  const isValidBody = request.body && Object.keys(request.body).length != 0;
-  const body = isValidBody ? JSON.stringify(request.body) : '';
-
-  console.log(`Got:\nsignature:${signature},\ntimestamp: ${timestamp},\nbody: ${body}`)
-
-  if (!signature || !timestamp) {
-    return false;
-  }
-
-  let isValid = false;
-  try {
-    isValid = nacl.sign.detached.verify(
-      Buffer.from(timestamp + body),
-      Buffer.from(signature, 'hex'),
-      Buffer.from(appPublicKey, 'hex')
-    );
-  } catch (_) {
-    return false;
-  }
-
-  return isValid;
 }
