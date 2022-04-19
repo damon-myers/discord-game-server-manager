@@ -10,7 +10,13 @@ enum SupportedCommands {
 };
 
 export async function handleDiscordRequest(request: Request, response: Response): Promise<void> {
-  const payload: Interaction = request.body;
+  const payload = request.body; // already parsed by middleware
+  console.log(`Received payload: ${JSON.stringify(payload)}`);
+
+  if (!payload || Object.keys(payload).length === 0) {
+    response.status(400).send("bad request - no payload");
+    return;
+  }
 
   const subcommandName = payload.data && payload.data.options && payload.data.options[0].name;
 

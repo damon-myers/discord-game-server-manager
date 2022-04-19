@@ -27,7 +27,6 @@ async function initExpress() {
 
   app.use(
     verifyKeyMiddleware(process.env.DISCORD_APP_PUBLIC_KEY),
-    express.json(),
     checkTokenMiddleware
   );
 
